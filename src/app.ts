@@ -8,18 +8,17 @@ import morgan from 'morgan';
 import compression from 'compression';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
-import { createConnection } from 'typeorm';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
-import { dbConnection } from '@databases';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import mongoose from 'mongoose';
+import { dbConnection } from './databases';
 
 class App {
   public app: express.Application;
   public env: string;
   public port: string | number;
-
   constructor(routes: Routes[]) {
     this.app = express();
     this.env = NODE_ENV || 'development';
@@ -46,7 +45,7 @@ class App {
   }
 
   private connectToDatabase() {
-    // createConnection(dbConnection);
+    dbConnection.connect();
   }
 
   private initializeMiddlewares() {
